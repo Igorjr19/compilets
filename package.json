@@ -11,11 +11,13 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@types/moo": "^0.5.9",
     "bootstrap": "^5.3.3",
+    "moo": "^0.5.2",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
-    "tokenizr": "^1.7.0"
+    "react-simple-code-editor": "^0.14.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",

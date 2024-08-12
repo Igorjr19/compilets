@@ -1,44 +1,43 @@
-import Tokenizr from 'tokenizr';
-import { TokenTypes } from './enum/token-types.enum';
+import moo from 'moo';
 
-const lexer = new Tokenizr();
+export const keywords = Object.fromEntries(
+  ['receba', 'borabill', 'laele', 'indoali'].map((keyword) => [
+    'kw-' + keyword,
+    keyword,
+  ]),
+);
 
-lexer.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, (ctx) => {
-  ctx.accept(TokenTypes.ID);
+export const types = Object.fromEntries(
+  ['int', 'double', 'string', 'boolean'].map((type) => ['type-' + type, type]),
+);
+
+const lexer = moo.compile({
+  ws: /[ \t]+/,
+  lb: { match: /\n/, lineBreaks: true },
+  comment: /\/\/.*?$/,
+  'multiline-comment': /\/\*[\s\S]*?\*\//,
+  ...keywords,
+  ...types,
+  string: /"(?:\\["\\]|[^\n"\\])*"/,
+  number: /0|[1-9][0-9]*/,
+  boolean: ['true', 'false'],
+  null: 'null',
+  'l-brace': '{',
+  'r-Brace': '}',
+  'l-bracket': '[',
+  'r-bracket': ']',
+  'l-paren': '(',
+  'r-paren': ')',
+  colon: ':',
+  comma: ',',
+  semicolon: ';',
+  id: /[a-zA-Z_][a-zA-Z0-9_]*/,
+  plus: '+',
+  minus: '-',
+  times: '*',
+  div: '/',
+  mod: '%',
+  error: moo.error,
 });
-
-lexer.rule(/[+-]?[0-9]+/, (ctx, match) => {
-  ctx.accept(TokenTypes.NUMBER, parseInt(match[0]));
-});
-
-lexer.rule(/[0-9]+\.[0-9]+/, (ctx) => {
-  ctx.accept(TokenTypes.NUMBER);
-});
-
-lexer.rule(/\+/, (ctx) => {
-  ctx.accept(TokenTypes.PLUS_SYMBOL);
-});
-
-lexer.rule(/-/, (ctx) => {
-  ctx.accept(TokenTypes.MINUS_SYMBOL);
-});
-
-lexer.rule(/\*/, (ctx) => {
-  ctx.accept(TokenTypes.MULTIPLICATION_SYMBOL);
-});
-
-lexer.rule(/\//, (ctx) => {
-  ctx.accept(TokenTypes.DIVISION_SYMBOL);
-});
-
-lexer.rule(/\/\/[^\r\n]*\r?\n/, (ctx) => {
-  ctx.ignore();
-});
-
-lexer.rule(/[ \t\r\n]+/, (ctx) => {
-  ctx.ignore();
-});
-
-lexer.debug(false);
 
 export default lexer;
