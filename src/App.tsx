@@ -36,7 +36,7 @@ const App: React.FC = () => {
           <div className="file-content">
             <div className="line-numbers">
               {lineCount &&
-                [...Array.from({ length: lineCount })].map((_, index) => (
+                Array.from({ length: lineCount }).map((_, index) => (
                   <span key={index}>{index + 1}</span>
                 ))}
             </div>
