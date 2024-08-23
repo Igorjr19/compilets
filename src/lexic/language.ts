@@ -1,11 +1,20 @@
+import { Keywords } from './enum/keywords.enum';
+import { Procedures } from './enum/procedures.enum';
+import { Types } from './enum/types.enum';
+
 const keywords = Object.fromEntries(
-  ['if', 'else', 'while', 'for', 'return', 'break', 'continue', 'function'].map(
-    (keyword) => ['kw-' + keyword, keyword],
-  ),
+  [...Object.values(Keywords)].map((keyword) => ['kw-' + keyword, keyword]),
 );
 
 const types = Object.fromEntries(
-  ['int', 'double', 'string', 'boolean'].map((type) => ['type-' + type, type]),
+  [...Object.values(Types)].map((type) => ['type-' + type, type]),
 );
 
-export { keywords, types };
+const procedures = Object.fromEntries(
+  [...Object.values(Procedures)].map((procedure) => [
+    'procedure-' + procedure,
+    procedure,
+  ]),
+);
+
+export { keywords, procedures, types };

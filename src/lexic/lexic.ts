@@ -7,11 +7,12 @@ export const tokenize = (input: string): Token[] => {
   const tokens: Token[] = [];
 
   tokenizer.reset(input);
-  for (const token of tokenizer) {
-    if (ignoreTokens.includes(token.type as keyof typeof token)) {
-      continue;
+  let token = tokenizer.next();
+  while (token) {
+    if (token.type && !ignoreTokens.includes(token.type)) {
+      tokens.push(token);
     }
-    tokens.push(token);
+    token = tokenizer.next();
   }
 
   return tokens;
