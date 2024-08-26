@@ -5,7 +5,7 @@ const lexer = moo.compile({
   ws: { match: /[ \t]+/ },
   lb: { match: /\r?\n/, lineBreaks: true },
   comment: { match: /\/\/.*?$/ },
-  'multiline-comment': /\/\*[\s\S]*?\*\//,
+  'multiline-comment': /{[\s\S]*?}/,
   identifier: {
     match: /[a-zA-Z]+/,
     type: moo.keywords({ ...keywords, ...types }),
@@ -45,10 +45,6 @@ const lexer = moo.compile({
   colon: ':',
   comma: ',',
   dot: '.',
-  'l-bracket': '[',
-  'r-bracket': ']',
-  'l-curly': '{',
-  'r-curly': '}',
   error: /./,
 });
 
