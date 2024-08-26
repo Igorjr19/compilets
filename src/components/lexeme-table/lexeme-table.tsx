@@ -1,5 +1,6 @@
 import { Token } from 'moo';
 import DefaultTable from '../default-table/default-table';
+import './lexeme-table.css';
 
 interface LexemeTableProps {
   tokens: Token[];
