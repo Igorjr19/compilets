@@ -17,12 +17,48 @@ const App: React.FC = () => {
     setLineCount(code.split('\n').length);
   };
 
+  const handleOpenFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        const content = e.target?.result;
+        if (typeof content === 'string') {
+          setCode(content);
+          setLexemeTable(tokenize(content));
+          setLineCount(content.split('\n').length);
+        }
+      };
+      fileReader.readAsText(file);
+    }
+  };
+
+  const handleSaveFile = () => {
+    const blob = new Blob([code], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'code.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="app">
       {/* Header */}
       <div className="header">
         <ul>
-          <li>Arquivo</li>
+          <li>
+            Arquivo
+            <ul>
+              <li>Novo</li>
+              <li>Abrir</li>
+              <li>Salvar</li>
+              <li>Salvar Como</li>
+              <li>Fechar</li>
+            </ul>
+          </li>
+
           <li>Editar</li>
           <li>Exibir</li>
           <li>Localizar</li>
@@ -50,6 +86,15 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="tools-area">
+          <button className="save-btn" onClick={handleSaveFile}>
+            Salvar
+          </button>
+          <input
+            className="open-file"
+            type="file"
+            accept=".txt"
+            onChange={handleOpenFile}
+          />
           <ul className="nav-tools">
             <li
               className={activeToolTab === 'tab1' ? 'active' : ''}
