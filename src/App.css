@@ -206,12 +206,16 @@ ul.nav-tools li {
   font-size: small;
   cursor: pointer;
   transition: all 0.7s;
-  border-bottom-left-radius: 2rem;
-  border-top-left-radius: 2rem;
   padding: 0;
 }
 
-ul.nav-tools li:nth-child(2) {
+ul.nav-tools li:nth-child(1) {
+  border-radius: 0;
+  border-bottom-left-radius: 2rem;
+  border-top-left-radius: 2rem;
+}
+
+ul.nav-tools li:nth-last-child(1) {
   border-radius: 0;
   border-bottom-right-radius: 2rem;
   border-top-right-radius: 2rem;
@@ -242,13 +246,4 @@ ul.nav-tools li.active {
   ul.nav-tools li.active {
     background: hsl(0, 0%, 70%);
   }
-}
-
-.lexeme-table {
-  padding: 1rem;
-  border-radius: 2rem;
-  color: #ededed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

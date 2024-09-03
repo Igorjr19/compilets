@@ -1,0 +1,8 @@
+.lexeme-table {
+  padding: 1rem;
+  border-radius: 2rem;
+  color: #ededed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
