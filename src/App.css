@@ -246,4 +246,10 @@ ul.nav-tools li.active {
   ul.nav-tools li.active {
     background: hsl(0, 0%, 70%);
   }
+
+  /* // MARK: Modal
+*/
+}
+
+.modal {
 }
