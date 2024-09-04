@@ -13,6 +13,9 @@ const App: React.FC = () => {
   const [code, setCode] = useState<string>('');
   const [lineCount, setLineCount] = useState<number>(1);
   const [showModal, setShowModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const inputFileRef = React.useRef<HTMLInputElement>(null);
 
@@ -47,9 +50,29 @@ const App: React.FC = () => {
     handleCloseModal();
   };
 
+  const handleNewFile = () => {
+    if (code.trim() !== '') {
+      setShowConfirmModal(true);
+    } else {
+      setCode('');
+      setLineCount(1);
+    }
+  };
+
+  const handleConfirmNewFile = () => {
+    setCode('');
+    setLineCount(1);
+    setShowConfirmModal(false);
+  };
+
   return (
     <>
-      <Modal centered show={showModal} onHide={handleCloseModal}>
+      <Modal
+        centered
+        show={showModal}
+        onHide={handleCloseModal}
+        className="modal-load-file"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Carregar arquivo</Modal.Title>
         </Modal.Header>
@@ -61,20 +84,52 @@ const App: React.FC = () => {
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={handleCloseModal}>Fechar</Button>
+            <Button className="btn-secondary" onClick={handleCloseModal}>
+              Fechar
+            </Button>
             <Button type="submit">Carregar</Button>
           </Modal.Footer>
         </Form>
+      </Modal>
+
+      <Modal
+        centered
+        show={showConfirmModal}
+        onHide={() => setShowConfirmModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Todo o conteúdo atual será perdido. Deseja continuar?</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            className="btn-secondary"
+            onClick={() => setShowConfirmModal(false)}
+          >
+            Cancelar
+          </Button>
+          <Button onClick={handleConfirmNewFile}>Confirmar</Button>
+        </Modal.Footer>
       </Modal>
 
       <div className="app">
         {/* Header */}
         <div className="header">
           <ul>
-            <li>
-              <Button onClick={handleShowModal}>Carregar Arquivo</Button>
+            <li onMouseLeave={() => setIsDropdownOpen(false)}>
+              <span onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                Arquivo
+              </span>
+              {isDropdownOpen && (
+                <ul className="submenu">
+                  <li onClick={handleNewFile}>Novo</li>
+                  <li onClick={handleShowModal}>Abrir</li>
+                  <li>Salvar</li>
+                </ul>
+              )}
             </li>
-            <li>Arquivo</li>
             <li>Editar</li>
             <li>Exibir</li>
             <li>Localizar</li>
