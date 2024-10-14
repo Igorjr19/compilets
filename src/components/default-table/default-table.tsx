@@ -16,8 +16,8 @@ function DefaultTable<T extends object>({
       <table>
         <thead>
           <tr>
-            {labels.map((label) => {
-              return <th>{label}</th>;
+            {labels.map((label, index) => {
+              return <th key={index}>{label}</th>;
             })}
           </tr>
         </thead>

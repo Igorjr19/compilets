@@ -1,7 +1,7 @@
 import { Token } from 'moo';
 import tokenizer from './tokenizer';
 
-const ignoreTokens = ['ws', 'lb', 'comment', 'multiline-comment'];
+const ignoreTokens = ['ws', 'comment', 'multiline-comment'];
 
 export const tokenize = (input: string): Token[] => {
   const tokens: Token[] = [];
