@@ -1,5 +1,4 @@
 import { Token } from 'moo';
-import nearley from 'nearley';
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import Editor from 'react-simple-code-editor';
@@ -7,7 +6,6 @@ import './App.css';
 import ErrorTab from './components/error-tab/error-tab';
 import LexemeTable from './components/lexeme-table/lexeme-table';
 import { tokenize } from './lexic/lexic';
-import grammar from './syntatic/generated/grammar';
 
 const App: React.FC = () => {
   const [activeToolTab, setActiveToolTab] = useState('tab1');
@@ -21,9 +19,6 @@ const App: React.FC = () => {
 
   const inputFileRef = React.useRef<HTMLInputElement>(null);
 
-  const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar), {
-    keepHistory: true,
-  });
   const [parserResult, setParserResult] = useState<unknown[]>([]);
 
   const handleCodeChange = (code: string) => {
@@ -72,29 +67,7 @@ const App: React.FC = () => {
     setShowConfirmModal(false);
   };
 
-  const formatParserError = (tokens: Token[]) => {
-    const parsingResult = [];
-    for (const token of tokens) {
-      try {
-        parser.feed(token.text);
-        parsingResult.push(parser.results);
-      } catch {
-        const unexpectedToken = token.text;
-        if (unexpectedToken === '\n') {
-          continue;
-        }
-        const message = `Syntax error: unexpected token "${unexpectedToken}" at line ${token.line} column ${token.col}`;
-        parsingResult.push(new Error(message));
-      }
-    }
-    return parsingResult;
-  };
-
-  useEffect(() => {
-    const tokens = tokenize(code);
-    const parsingResult = formatParserError(tokens);
-    setParserResult(parsingResult);
-  }, [code]);
+  useEffect(() => {}, [code]);
 
   return (
     <>

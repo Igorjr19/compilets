@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@types/moo": "^0.5.9",
+    "antlr4": "^4.13.2",
     "bootstrap": "^5.3.3",
     "moo": "^0.5.2",
     "nearley": "^2.20.1",
