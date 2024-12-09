@@ -29,6 +29,12 @@ function Highlighter(props: HighlighterProps) {
         if (token.type === 'integer' || token.type === 'boolean') {
           className = 'literal';
         }
+        if (token.type === 'comment') {
+          className = 'comment';
+        }
+        if (token.value === 'write' || token.value === 'read') {
+          className = 'io';
+        }
 
         return (
           <span className={className} key={index}>

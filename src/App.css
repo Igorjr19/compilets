@@ -299,3 +299,10 @@ ul.nav-tools li.active {
     color: #000;
   }
 }
+
+.code-generate-title {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 1rem 0 0 0.5rem;
+}

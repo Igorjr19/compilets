@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import Editor from 'react-simple-code-editor';
 import './App.css';
+import CodeGenerator from './compiler/code-generation/CodeGenerator';
 import { tokenize } from './compiler/lexic/lexic';
 import Parser from './compiler/syntatic/parser';
 import { LexicReturn } from './compiler/syntatic/types';
@@ -17,6 +18,7 @@ const App: React.FC = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isCompiled, setIsCompiled] = useState(false);
 
   const inputFileRef = React.useRef<HTMLInputElement>(null);
 
@@ -25,20 +27,23 @@ const App: React.FC = () => {
   const [lexicResult, setLexicResult] = useState<LexicReturn>();
   const [syntaticResult, setSyntaticResult] = useState<string[]>([]);
   const [semanticResult, setSemanticResult] = useState<string[]>([]);
+  const [generator, setGenerator] = useState<CodeGenerator>();
+  const [parser, setParser] = useState<Parser>(new Parser(''));
 
   const handleCodeChange = (code: string) => {
-    const parser = new Parser(code);
+    const newParser = new Parser(code);
+    setParser(newParser);
     setCode(code);
     setLineCount(code.split('\n').length);
     setToken(tokenize(code));
     setLexicResult(
-      parser.formatTokens(
-        parser.lexicAnalisys(),
+      newParser.formatTokens(
+        newParser.lexicAnalisys(),
         code.trim().replace(/\r?\n|\r/g, '\n'),
       ),
     );
-    setSyntaticResult(parser.sintatic());
-    setSemanticResult(parser.semantic());
+    setSyntaticResult(newParser.sintatic());
+    setSemanticResult(newParser.semantic());
   };
 
   const handleShowModal = () => {
@@ -79,6 +84,17 @@ const App: React.FC = () => {
     setCode('');
     setLineCount(1);
     setShowConfirmModal(false);
+  };
+
+  const handleEdit = () => {
+    setIsCompiled(false);
+  };
+
+  const handleCompile = () => {
+    const generator = new CodeGenerator();
+    setGenerator(generator);
+    generator.start(parser.tree);
+    setIsCompiled(true);
   };
 
   useEffect(() => {}, [code]);
@@ -148,62 +164,94 @@ const App: React.FC = () => {
                 </ul>
               )}
             </li>
-            <li>Editar</li>
+            <li onClick={handleEdit}>Editar</li>
             <li>Exibir</li>
             <li>Localizar</li>
-            <li>Compilar</li>
+            <li onClick={handleCompile}>Compilar</li>
             <li>Executar</li>
           </ul>
         </div>
         {/* Content */}
         <div className="content">
           <div className="file-area">
+            {isCompiled && (
+              <h1 className="code-generate-title">Código Gerado</h1>
+            )}
             <div className="file-content">
-              <div className="line-numbers">
-                {lineCount &&
-                  Array.from({ length: lineCount }).map((_, index) => (
-                    <span key={index}>{index + 1}</span>
-                  ))}
-              </div>
-              <Editor
-                className="code-editor"
-                padding={10}
-                highlight={(code) => <Highlighter code={code} />}
-                onValueChange={(code) => handleCodeChange(code)}
-                value={code}
-              />
+              {isCompiled ? (
+                <>
+                  <div className="line-numbers">
+                    {generator?.code &&
+                      Array.from({
+                        length: generator?.code
+                          .split(/\r?\n/)
+                          .filter((value) => value.trim()).length,
+                      }).map((_, index) => (
+                        <span key={index}>{index + 1}</span>
+                      ))}
+                  </div>
+                  <Editor
+                    contentEditable={false}
+                    className="code-editor"
+                    padding={10}
+                    highlight={(code) => code}
+                    value={generator?.code || ''}
+                    onValueChange={() => null}
+                  />
+                </>
+              ) : (
+                <>
+                  <div className="line-numbers">
+                    {lineCount &&
+                      Array.from({ length: lineCount }).map((_, index) => (
+                        <span key={index}>{index + 1}</span>
+                      ))}
+                  </div>
+                  <Editor
+                    className="code-editor"
+                    padding={10}
+                    highlight={(code) => <Highlighter code={code} />}
+                    onValueChange={(code) => handleCodeChange(code)}
+                    value={code}
+                  />
+                </>
+              )}
             </div>
           </div>
-          <div className="tools-area">
-            <ul className="nav-tools">
-              <li
-                className={activeToolTab === 'tab1' ? 'active' : ''}
-                onClick={() => setActiveToolTab('tab1')}
-              >
-                Problemas
-              </li>
-              <li
-                className={activeToolTab === 'tab2' ? 'active' : ''}
-                onClick={() => setActiveToolTab('tab2')}
-              >
-                Tabela de Lexemas
-              </li>
-              <li
-                className={activeToolTab === 'tab3' ? 'active' : ''}
-                onClick={() => setActiveToolTab('tab3')}
-              >
-                Logs de Compilação
-              </li>
-            </ul>
-            {activeToolTab === 'tab1' && (
-              <ErrorTab
-                tokens={tokens}
-                syntaticResult={syntaticResult}
-                semanticResult={semanticResult}
-              />
-            )}
-            {activeToolTab === 'tab2' && <LexemeTable tokens={tokens} />}
-          </div>
+          {isCompiled ? (
+            <></>
+          ) : (
+            <div className="tools-area">
+              <ul className="nav-tools">
+                <li
+                  className={activeToolTab === 'tab1' ? 'active' : ''}
+                  onClick={() => setActiveToolTab('tab1')}
+                >
+                  Problemas
+                </li>
+                <li
+                  className={activeToolTab === 'tab2' ? 'active' : ''}
+                  onClick={() => setActiveToolTab('tab2')}
+                >
+                  Tabela de Lexemas
+                </li>
+                <li
+                  className={activeToolTab === 'tab3' ? 'active' : ''}
+                  onClick={() => setActiveToolTab('tab3')}
+                >
+                  Logs de Compilação
+                </li>
+              </ul>
+              {activeToolTab === 'tab1' && (
+                <ErrorTab
+                  tokens={tokens}
+                  syntaticResult={syntaticResult}
+                  semanticResult={semanticResult}
+                />
+              )}
+              {activeToolTab === 'tab2' && <LexemeTable tokens={tokens} />}
+            </div>
+          )}
         </div>
       </div>
     </>

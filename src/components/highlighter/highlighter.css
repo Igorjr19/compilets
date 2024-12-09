@@ -21,3 +21,11 @@
 .literal {
   color: #c678dd;
 }
+
+.comment {
+  color: #5c6370;
+}
+
+.io {
+  color: #528bff;
+}
