@@ -1,0 +1,23 @@
+.default {
+  color: white;
+}
+
+.keyword {
+  color: #e06c75;
+}
+
+.identifier {
+  color: #d19a66;
+}
+
+.type {
+  color: #98c379;
+}
+
+.operator {
+  color: #56b6c2;
+}
+
+.literal {
+  color: #c678dd;
+}

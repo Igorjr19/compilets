@@ -7,6 +7,7 @@ import { tokenize } from './compiler/lexic/lexic';
 import Parser from './compiler/syntatic/parser';
 import { LexicReturn } from './compiler/syntatic/types';
 import ErrorTab from './components/error-tab/error-tab';
+import Highlighter from './components/highlighter/highlighter';
 import LexemeTable from './components/lexeme-table/lexeme-table';
 
 const App: React.FC = () => {
@@ -167,7 +168,7 @@ const App: React.FC = () => {
               <Editor
                 className="code-editor"
                 padding={10}
-                highlight={(code) => code}
+                highlight={(code) => <Highlighter code={code} />}
                 onValueChange={(code) => handleCodeChange(code)}
                 value={code}
               />

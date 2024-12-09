@@ -1,4 +1,5 @@
 import { Token } from 'moo';
+import { ignoreTokens } from '../../compiler/lexic/lexic';
 import DefaultTable from '../default-table/default-table';
 import './lexeme-table.css';
 
@@ -12,7 +13,9 @@ function LexemeTable(props: LexemeTableProps) {
       <DefaultTable
         labels={['Lexema', 'Tipo', 'Linha', 'Coluna']}
         columns={['value', 'type', 'line', 'col']}
-        data={props.tokens}
+        data={props.tokens.filter(
+          (token) => !ignoreTokens.includes(token.type as string),
+        )}
       />
     </div>
   );
