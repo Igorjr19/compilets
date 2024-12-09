@@ -165,8 +165,8 @@ const App: React.FC = () => {
               )}
             </li>
             <li onClick={handleEdit}>Editar</li>
-            <li>Exibir</li>
-            <li>Localizar</li>
+            {/* <li>Exibir</li> */}
+            {/* <li>Localizar</li> */}
             <li onClick={handleCompile}>Compilar</li>
             <li>Executar</li>
           </ul>
