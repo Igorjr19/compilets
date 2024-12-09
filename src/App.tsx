@@ -1,4 +1,4 @@
-import { Token } from 'moo';
+import { Token as MooToken } from 'moo';
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import Editor from 'react-simple-code-editor';
@@ -6,11 +6,11 @@ import './App.css';
 import ErrorTab from './components/error-tab/error-tab';
 import LexemeTable from './components/lexeme-table/lexeme-table';
 import { tokenize } from './lexic/lexic';
+import Parser from './syntatic/Parser';
+import { LexicReturn } from './syntatic/types';
 
 const App: React.FC = () => {
   const [activeToolTab, setActiveToolTab] = useState('tab1');
-  const [tokens, setToken] = useState<Token[]>([]);
-  const [code, setCode] = useState<string>('');
   const [lineCount, setLineCount] = useState<number>(1);
   const [showModal, setShowModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -19,12 +19,25 @@ const App: React.FC = () => {
 
   const inputFileRef = React.useRef<HTMLInputElement>(null);
 
-  const [parserResult, setParserResult] = useState<unknown[]>([]);
+  const [code, setCode] = useState<string>('');
+  const [tokens, setToken] = useState<MooToken[]>([]);
+  const [lexicResult, setLexicResult] = useState<LexicReturn>();
+  const [syntaticResult, setSyntaticResult] = useState<string[]>([]);
+  const [semanticResult, setSemanticResult] = useState<string[]>([]);
 
   const handleCodeChange = (code: string) => {
+    const parser = new Parser(code);
     setCode(code);
-    setToken(tokenize(code));
     setLineCount(code.split('\n').length);
+    setToken(tokenize(code));
+    setLexicResult(
+      parser.formatTokens(
+        parser.lexicAnalisys(),
+        code.trim().replace(/\r?\n|\r/g, '\n'),
+      ),
+    );
+    setSyntaticResult(parser.sintatic());
+    setSemanticResult(parser.semantic());
   };
 
   const handleShowModal = () => {
@@ -182,7 +195,11 @@ const App: React.FC = () => {
               </li>
             </ul>
             {activeToolTab === 'tab1' && (
-              <ErrorTab tokens={tokens} parserResult={parserResult} />
+              <ErrorTab
+                tokens={tokens}
+                syntaticResult={syntaticResult}
+                semanticResult={semanticResult}
+              />
             )}
             {activeToolTab === 'tab2' && <LexemeTable tokens={tokens} />}
           </div>
