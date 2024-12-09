@@ -12,8 +12,8 @@ import {
   ProgramaContext,
   SecaoParametrosContext,
   TermoContext,
-} from '../antlr/LALGGrammar';
-import LALGGrammarVisitor from '../antlr/LALGGrammarVisitor';
+} from '../../antlr/LALGGrammar';
+import LALGGrammarVisitor from '../../antlr/LALGGrammarVisitor';
 import CustomErrorListener from '../syntatic/CustomErrorListener';
 import {
   ParameterSymbol,

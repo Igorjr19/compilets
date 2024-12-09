@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import Editor from 'react-simple-code-editor';
 import './App.css';
+import { tokenize } from './compiler/lexic/lexic';
+import Parser from './compiler/syntatic/parser';
+import { LexicReturn } from './compiler/syntatic/types';
 import ErrorTab from './components/error-tab/error-tab';
 import LexemeTable from './components/lexeme-table/lexeme-table';
-import { tokenize } from './lexic/lexic';
-import Parser from './syntatic/Parser';
-import { LexicReturn } from './syntatic/types';
 
 const App: React.FC = () => {
   const [activeToolTab, setActiveToolTab] = useState('tab1');
